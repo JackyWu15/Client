@@ -7,18 +7,12 @@
     >
 
     <Button
-        android:id="@+id/bt_aidl"
+        android:id="@+id/bt_bind"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="aidl"
-        android:text="AIDL"
+        android:onClick="bind"
+        android:text="绑定服务"
         />
-    <Button
-        android:id="@+id/bt_messenger"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="messenger"
-        android:text="Messenger"
-        />
+
 
 </LinearLayout>

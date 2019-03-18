@@ -7,18 +7,25 @@
     >
 
     <Button
-        android:id="@+id/bt_aidl"
+        android:id="@+id/bt_bind"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="aidl"
-        android:text="AIDL"
+        android:onClick="bind"
+        android:text="绑定服务"
         />
     <Button
-        android:id="@+id/bt_messenger"
+        android:id="@+id/bt_get"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="messenger"
-        android:text="Messenger"
+        android:onClick="get"
+        android:text="获取书籍"
+        />
+    <Button
+        android:id="@+id/bt_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="add"
+        android:text="添加书籍"
         />
 
 </LinearLayout>

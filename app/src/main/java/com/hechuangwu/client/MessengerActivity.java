@@ -59,4 +59,8 @@ public class MessengerActivity extends Activity {
         unbindService( mServiceConnection );
         super.onDestroy();
     }
+
+    public void back(View view) {
+        finish();
+    }
 }

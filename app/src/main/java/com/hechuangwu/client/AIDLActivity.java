@@ -81,4 +81,8 @@ public class AIDLActivity extends Activity {
         unbindService( mServiceConnection );
         super.onDestroy();
     }
+
+    public void back(View view) {
+        finish();
+    }
 }

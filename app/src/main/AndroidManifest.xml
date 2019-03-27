@@ -21,6 +21,7 @@
         <activity android:name=".AIDLActivity"/>
         <activity android:name=".MessengerActivity"/>
         <activity android:name=".SocketActivity"/>
+        <activity android:name=".BinderPoolActivity"/>
     </application>
 
 </manifest>

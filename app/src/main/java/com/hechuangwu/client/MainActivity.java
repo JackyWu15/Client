@@ -27,4 +27,8 @@ public class MainActivity extends AppCompatActivity {
     public void socket(View view) {
         startActivity( new Intent( this, SocketActivity.class ) );
     }
+
+    public void binderPoll(View view) {
+        startActivity( new Intent( this, BinderPoolActivity.class ) );
+    }
 }

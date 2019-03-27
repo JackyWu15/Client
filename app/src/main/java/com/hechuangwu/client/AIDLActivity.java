@@ -13,6 +13,7 @@ import android.view.View;
 
 import com.hechuangwu.server.aidl.Book;
 import com.hechuangwu.server.aidl.IBookAidlInterface;
+import com.hechuangwu.server.aidl.IBookListenerlInterface;
 import com.hechuangwu.utils.Config;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class AIDLActivity extends Activity {
 
     }
 
+
     public void bind(View view) {
         Intent intent = new Intent( );
         intent.setPackage( Config.PACKAGE_NAME );
@@ -40,10 +42,33 @@ public class AIDLActivity extends Activity {
         bindService( intent,mServiceConnection,Context.BIND_AUTO_CREATE );
     }
 
+    private IBinder.DeathRecipient mDeathRecipient = new IBinder.DeathRecipient(){
+        @Override
+        public void binderDied() {
+            if(mIBookAidlInterface!=null){
+                mIBookAidlInterface.asBinder().unlinkToDeath( mDeathRecipient ,0);
+                mIBookAidlInterface = null;
+                Log.i( "data", "binderDied: >>>>>>>>>>>>>>>>>>>" );
+                bind( null );
+
+            }
+        }
+    };
+
     ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mIBookAidlInterface = IBookAidlInterface.Stub.asInterface( service );
+            try {
+                service.linkToDeath( mDeathRecipient,0 );
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            try {
+                mIBookAidlInterface.registerBookListener(mIBookListenerlInterface);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -52,17 +77,39 @@ public class AIDLActivity extends Activity {
         }
     };
 
+    private IBookListenerlInterface mIBookListenerlInterface = new IBookListenerlInterface.Stub() {
+        @Override
+        public void addNewBookListener(final Book book) throws RemoteException {
+            //bundle位于线程池中
+            runOnUiThread( new Runnable() {
+                @Override
+                public void run() {
+                    Log.i( "data", "addNewBookListener: "+book );
+                }
+            } );
+
+        }
+    };
+
+
+
     public void get(View view) {
         if(mIBookAidlInterface!=null){
-            List<Book> booKList = null;
-            try {
-                booKList = mIBookAidlInterface.getBookList();
-                for(Book book:booKList){
-                    Log.i( "data", "get: "+book );
-                }
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+            //处理服务端做耗时操作
+                new Thread( new Runnable() {
+                    @Override
+                    public void run() {
+                        List<Book> booKList  = null;
+                        try {
+                            booKList = mIBookAidlInterface.getBookList();
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                        for(Book book:booKList){
+                            Log.i( "data", "get: "+book );
+                        }
+                    }
+                } ).start();
 
         }
     }
@@ -78,7 +125,14 @@ public class AIDLActivity extends Activity {
 
     @Override
     protected void onDestroy() {
-        unbindService( mServiceConnection );
+        if(mIBookAidlInterface!=null&&mIBookAidlInterface.asBinder().isBinderAlive()){
+            try {
+                mIBookAidlInterface.unRegisterBookListener( mIBookListenerlInterface );
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            unbindService( mServiceConnection );
+        }
         super.onDestroy();
     }
 

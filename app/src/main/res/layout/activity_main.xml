@@ -5,11 +5,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     >
-
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:text="进程间通信"
+    android:textSize="20sp"
+    android:background="#ffffff"
+    />
     <Button
         android:id="@+id/bt_aidl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:onClick="aidl"
         android:text="AIDL"
         />
@@ -19,6 +27,12 @@
         android:layout_height="wrap_content"
         android:onClick="messenger"
         android:text="Messenger"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="socket"
+        android:text="Socket"
         />
 
 </LinearLayout>

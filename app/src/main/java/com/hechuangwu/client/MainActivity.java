@@ -12,13 +12,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main );
+
+
     }
 
     public void aidl(View view) {
-        startActivity( new Intent( this,AIDLActivity.class ) );
+        startActivity( new Intent( this, AIDLActivity.class ) );
     }
 
     public void messenger(View view) {
-        startActivity( new Intent( this,MessengerActivity.class ) );
+        startActivity( new Intent( this, MessengerActivity.class ) );
+    }
+
+    public void socket(View view) {
+        startActivity( new Intent( this, SocketActivity.class ) );
     }
 }

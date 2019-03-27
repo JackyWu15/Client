@@ -42,12 +42,12 @@ public class SocketActivity extends Activity implements View.OnClickListener {
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case CONNECT_SUCCESSFUL:
-                    Toast.makeText( SocketActivity.this,(String)msg.obj,Toast.LENGTH_LONG ).show();
+                    Toast.makeText( SocketActivity.this, (String) msg.obj, Toast.LENGTH_LONG ).show();
                     mBt_send.setEnabled( true );
                     break;
                 case 1:
                     String serverMessage = "server (" + formatDateLong( System.currentTimeMillis() ) + "):\n" + msg.obj + "\n\n";
-                    mTv_message.setText( mTv_message.getText()+"\n\n"+serverMessage);
+                    mTv_message.setText( mTv_message.getText() + "\n\n" + serverMessage );
                     break;
             }
             return false;
@@ -115,29 +115,30 @@ public class SocketActivity extends Activity implements View.OnClickListener {
                 e.printStackTrace();
             }
         }
-
-        while (!this.isFinishing()) {
-            try {
-                BufferedReader bufferedReader = new BufferedReader( new InputStreamReader( mServerSocket.getInputStream() ) );
+        try {
+            BufferedReader bufferedReader = new BufferedReader( new InputStreamReader( mServerSocket.getInputStream() ) );
+            while (!this.isFinishing()) {
                 String message = bufferedReader.readLine();
-                if(!TextUtils.isEmpty( message )){
+                if (!TextUtils.isEmpty( message )) {
                     Message obtain = Message.obtain();
                     obtain.what = RECEIVER_SUCCESSFUL;
                     obtain.obj = message;
                     mHandler.sendMessage( obtain );
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+            bufferedReader.close();
+            mPrintWriter.close();
+            mServerSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
 
     }
 
     @Override
     public void onClick(View v) {
         final String message = mEt_message.getText().toString().trim();
-        if (!TextUtils.isEmpty( message )&&mPrintWriter!=null) {
+        if (!TextUtils.isEmpty( message ) && mPrintWriter != null) {
             new Thread( new Runnable() {
                 @Override
                 public void run() {
@@ -146,7 +147,7 @@ public class SocketActivity extends Activity implements View.OnClickListener {
                         @Override
                         public void run() {
                             mEt_message.setText( "" );
-                            String clientMessage = "client ("+formatDateLong( System.currentTimeMillis() )+"):\n" +message;
+                            String clientMessage = "client (" + formatDateLong( System.currentTimeMillis() ) + "):\n" + message;
                             mTv_message.setText( mTv_message.getText() + clientMessage );
                         }
                     } );
